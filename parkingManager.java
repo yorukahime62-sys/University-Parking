@@ -39,27 +39,32 @@ public class parkingManager{
 
     public void parkVehicle(Scanner scanner) {
         System.out.print("Enter vehicle type (Motorcycle/Car): ");
-        String vehicleType = scanner.nextLine();
+        String inputType = scanner.nextLine().trim();
+
+        String vehicleType;
+        if (inputType.equalsIgnoreCase("Motorcycle") || inputType.equalsIgnoreCase("M")) {
+            vehicleType = "Motorcycle";
+        } else if (inputType.equalsIgnoreCase("Car") || inputType.equalsIgnoreCase("C")) {
+            vehicleType = "Car";
+        } else {
+            System.out.println("Invalid vehicle type.");
+            return;
+        }
 
         System.out.print("Enter license plate: ");
         String licensePlate = scanner.nextLine();
 
+        System.out.print("Enter color: ");
+        String color = scanner.nextLine();
+
+        System.out.print("Enter model: ");
+        String model = scanner.nextLine();
+
         Vehicle vehicle;
-        if (vehicleType.equalsIgnoreCase("Motorcycle")|| vehicleType.equalsIgnoreCase("M")){
-            System.out.print("Enter color: ");
-            String color = scanner.nextLine();
-            System.out.print("Enter model: ");
-            String model = scanner.nextLine();
+        if (vehicleType.equals("Motorcycle")) {
             vehicle = new Motorcycle(licensePlate, vehicleType, color, model);
-        } else if (vehicleType.equalsIgnoreCase("Car")|| vehicleType.equalsIgnoreCase("C")) {
-            System.out.print("Enter color: ");
-            String color = scanner.nextLine();
-            System.out.print("Enter model: ");
-            String model = scanner.nextLine();
-            vehicle = new car(licensePlate, vehicleType, color, model);
         } else {
-            System.out.println("Invalid vehicle type.");
-            return;
+            vehicle = new car(licensePlate, vehicleType, color, model);
         }
 
         for (ParkingSlot slot : parkingSlots) {
