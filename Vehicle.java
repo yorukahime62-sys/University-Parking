@@ -1,14 +1,18 @@
 import java.io.Serializable;
 
 
-public class Vehicle implements Serializable {
+public abstract class Vehicle implements Serializable {
     private static final long serialVersionUID = 1L;
     private String licensePlate;
     private String vehicleType;
+    private String color;
+    private String model;
 
-    public Vehicle(String licensePlate, String vehicleType) {
+public Vehicle(String licensePlate, String vehicleType, String color, String model) {
         this.licensePlate = licensePlate;
         this.vehicleType = vehicleType;
+        this.color = color;
+        this.model = model;
     }
 
     public String getLicensePlate() {
@@ -27,8 +31,26 @@ public class Vehicle implements Serializable {
         this.vehicleType = vehicleType;
     }
 
-    public void logVehicleDetails() {
-        System.out.println("Vehicle Parked");
+    public String getColor() {
+        return color;
     }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public abstract void logVehicleDetails();
+
+    // public void logVehicleDetails() {
+    //     System.out.println("Vehicle Parked");
+    // }
 
 }
