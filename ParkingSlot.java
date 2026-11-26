@@ -1,17 +1,18 @@
-// This class represents a parking slot in the parking system.
-// It contains attributes such as slot number, vehicle type, and occupancy status.
+import java.io.Serializable;
 
-public class ParkingSlot{
+
+
+public class ParkingSlot implements Serializable {
+    private static final long serialVersionUID = 1L;
     private int slotNumber;
     private String vehicleType;
-    private boolean isOccupied;
+    private Vehicle vehicle;
 
 
 
     public ParkingSlot(int slotNumber, String vehicleType) {
         this.slotNumber = slotNumber;
         this.vehicleType = vehicleType;
-        this.isOccupied = false;
     }
 
         public int getSlotNumber() {
@@ -21,13 +22,22 @@ public class ParkingSlot{
         return vehicleType;
     }
     public boolean isOccupied() {
-        return isOccupied;
+        return vehicle != null;
     }
-    public boolean occupySlot() {
-        return isOccupied = true;
+    public Vehicle getVehicle() {
+        return vehicle;
+    }
+    public boolean occupySlot(Vehicle vehicle) {
+        if (isOccupied() || vehicle == null
+                || !vehicleType.equalsIgnoreCase(vehicle.getVehicleType())) {
+            return false;
+        }
+        this.vehicle = vehicle;
+        return true;
     }
     public boolean freeSlot() {
-        return isOccupied = false;
+        this.vehicle = null;
+        return false;
     }
 
 }
