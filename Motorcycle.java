@@ -4,6 +4,7 @@
 // such as color and model.
 
 public class Motorcycle extends Vehicle {
+    private static final long serialVersionUID = 1L;
     private String color;
     private String model;
 

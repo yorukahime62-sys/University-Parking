@@ -1,9 +1,10 @@
 // Main blueprint and parent class for all vehicles.
 // This class contains the basic attributes and methods that all vehicles will have, such as license plate and vehicle type.
+import java.io.Serializable;
 
 
-
-public class Vehicle {
+public class Vehicle implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String licensePlate;
     private String vehicleType;
 
