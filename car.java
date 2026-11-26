@@ -1,9 +1,5 @@
-// This class represents a car,
-// which is a specific type of vehicle.
-// It extends the Vehicle class and adds additional attributes specific to cars,
-// such as color and model.
-
 public class car extends Vehicle {
+    private static final long serialVersionUID = 1L;
     private String color;
     private String model;
 
