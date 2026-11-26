@@ -4,30 +4,28 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 
-
-public class parkingManager{
+public class parkingManager {
     private static final String DATA_FILE = "parking_data.ser";
     private List<ParkingSlot> parkingSlots;
 
-    @SuppressWarnings ("unchecked")
+    @SuppressWarnings("unchecked")
     public void loadOrInitializeSlots() {
-            File file = new File(DATA_FILE);
-            if (file.exists()) {
-                try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))) {
-                    parkingSlots = (List<ParkingSlot>) in.readObject();
-                    return;
-                } catch (IOException | ClassNotFoundException e) {
-                    System.out.println("Could not load saved data (" + e.getMessage() + "). Starting fresh.");
-                }
+        File file = new File(DATA_FILE);
+        if (file.exists()) {
+            try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))) {
+                parkingSlots = (List<ParkingSlot>) in.readObject();
+                return;
+            } catch (IOException | ClassNotFoundException e) {
+                System.out.println("Could not load saved data (" + e.getMessage() + "). Starting fresh.");
             }
-            initializeParkingSlots();
-            saveParkingData();
+        }
+        initializeParkingSlots();
+        saveParkingData();
     }
 
     public void saveParkingData() {
@@ -37,8 +35,6 @@ public class parkingManager{
             System.out.println("Error saving parking data: " + e.getMessage());
         }
     }
-
-
 
     // 1 to 4 for motorcycles, 5 to 10 for cars
     public void initializeParkingSlots() {
@@ -116,12 +112,13 @@ public class parkingManager{
         for (ParkingSlot slot : parkingSlots) {
             if (!slot.isOccupied() && slot.getVehicleType().equalsIgnoreCase(vehicleType)) {
                 slot.occupySlot(vehicle);
+                saveParkingData();
                 vehicle.logVehicleDetails();
                 System.out.println("Slot number: " + slot.getSlotNumber());
                 return;
             }
         }
-        
+
         System.out.println("No available slots for " + vehicleType);
     }
 
@@ -144,6 +141,7 @@ public class parkingManager{
             if (slot.getSlotNumber() == slotNumber) {
                 if (slot.isOccupied()) {
                     slot.freeSlot();
+                    saveParkingData();
                     System.out.println("Vehicle unparked from slot number: " + slotNumber);
                 } else {
                     System.out.println("Slot number " + slotNumber + " is already free.");
@@ -154,5 +152,4 @@ public class parkingManager{
 
         System.out.println("Invalid slot number.");
     }
-        
 }

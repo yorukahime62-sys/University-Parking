@@ -15,7 +15,7 @@ public class ParkingSlot implements Serializable {
         this.vehicleType = vehicleType;
     }
 
-        public int getSlotNumber() {
+    public int getSlotNumber() {
         return slotNumber;
     }
     public String getVehicleType() {
@@ -35,9 +35,8 @@ public class ParkingSlot implements Serializable {
         this.vehicle = vehicle;
         return true;
     }
-    public boolean freeSlot() {
+    public void freeSlot() {
         this.vehicle = null;
-        return false;
     }
 
 }
