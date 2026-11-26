@@ -1,10 +1,44 @@
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 
 
 public class parkingManager{
+    private static final String DATA_FILE = "parking_data.ser";
     private List<ParkingSlot> parkingSlots;
+
+    @SuppressWarnings ("unchecked")
+    public void loadOrInitializeSlots() {
+            File file = new File(DATA_FILE);
+            if (file.exists()) {
+                try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))) {
+                    parkingSlots = (List<ParkingSlot>) in.readObject();
+                    return;
+                } catch (IOException | ClassNotFoundException e) {
+                    System.out.println("Could not load saved data (" + e.getMessage() + "). Starting fresh.");
+                }
+            }
+            initializeParkingSlots();
+            saveParkingData();
+    }
+
+    public void saveParkingData() {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(DATA_FILE))) {
+            out.writeObject(parkingSlots);
+        } catch (IOException e) {
+            System.out.println("Error saving parking data: " + e.getMessage());
+        }
+    }
+
+
 
     // 1 to 4 for motorcycles, 5 to 10 for cars
     public void initializeParkingSlots() {
@@ -33,6 +67,7 @@ public class parkingManager{
         for (ParkingSlot slot : parkingSlots) {
             if (slot.isOccupied()) {
                 System.out.println("Slot Number: " + slot.getSlotNumber() + ", Vehicle Type: " + slot.getVehicleType());
+                slot.getVehicle().logVehicleDetails();
             }
         }
     }
@@ -52,7 +87,18 @@ public class parkingManager{
         }
 
         System.out.print("Enter license plate: ");
-        String licensePlate = scanner.nextLine();
+        String licensePlate = scanner.nextLine().trim().toUpperCase(Locale.ROOT);
+        if (licensePlate.isEmpty()) {
+            System.out.println("License plate cannot be empty.");
+            return;
+        }
+        for (ParkingSlot slot : parkingSlots) {
+            if (slot.isOccupied()
+                    && slot.getVehicle().getLicensePlate().equalsIgnoreCase(licensePlate)) {
+                System.out.println("Vehicle is already parked in slot number: " + slot.getSlotNumber());
+                return;
+            }
+        }
 
         System.out.print("Enter color: ");
         String color = scanner.nextLine();
@@ -69,7 +115,7 @@ public class parkingManager{
 
         for (ParkingSlot slot : parkingSlots) {
             if (!slot.isOccupied() && slot.getVehicleType().equalsIgnoreCase(vehicleType)) {
-                slot.occupySlot();
+                slot.occupySlot(vehicle);
                 vehicle.logVehicleDetails();
                 System.out.println("Slot number: " + slot.getSlotNumber());
                 return;
@@ -81,8 +127,18 @@ public class parkingManager{
 
     public void unparkVehicle(Scanner scanner) {
         System.out.print("Enter slot number to unpark: ");
-        int slotNumber = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+        int slotNumber;
+        while (true) {
+            if (!scanner.hasNextLine()) {
+                return;
+            }
+            try {
+                slotNumber = Integer.parseInt(scanner.nextLine().trim());
+                break;
+            } catch (NumberFormatException e) {
+                System.out.print("Invalid slot number. Please enter a number: ");
+            }
+        }
 
         for (ParkingSlot slot : parkingSlots) {
             if (slot.getSlotNumber() == slotNumber) {
